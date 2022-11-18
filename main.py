@@ -32,18 +32,40 @@ def load_api_data():
     data = json.loads(response.text)
     return data
 
-def graph():
+def graph(dict):
     # TODO -
     #   graphs the air quality for the week and current month
     #   and saves an image of the graph in a folder (overrides previous saves)
-    columns = ['Week', 'Month']
+    pass
 
 def add_to_table(cursor, data):
     # TODO - adds a row into a table in the 'cne340_finalproject' database
     pass
 
+def parse_forecasts_data(dict, data):
+    # TODO - parses data for date and aqi and adds them to dict
+    for index, d in enumerate(data):
+        if index > 0:
+            date = d['ts']
+            time_two_digits = date[date.index('T') + 1:date.index('T') + 3]
+            if time_two_digits == '00':
+                aqi_us = str(d['aqius'])
+                date = date[:date.index('T')]
+                dict[date] = aqi_us
+        else:
+            date = d['ts']
+            aqi_us = str(d['aqius'])
+            date = date[:date.index('T')]
+            dict[date] = aqi_us
+    return dict
+
 def work():
-    # TODO - main loop of the script
+    # TODO -
+    #   parse api data (current and forecast) -
+    #       create a dictionary and add the parsed data from current
+    #       call parse_forecasts_data and reassign the value of the dictionary
+    #   pass the dictionary into graph to create a graph
+    #   add current data to the 'cne340_finalproject' database (only if the aqi for that day hasn't been added)
     pass
 
 def main():
@@ -55,10 +77,9 @@ def main():
     #while True:
         # TODO -
         #   work
-        #   graph
 
-        # 3600 seconds = 1 hour
-        #time.sleep(10)
+        # 21600 seconds = 6 hours
+        #time.sleep(21600)
 
 if __name__ == '__main__':
     main()
