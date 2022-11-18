@@ -27,10 +27,9 @@ def query(cursor, query):
 def load_api_data():
     # TODO - sends a http request method (a get request) to the api
     api_key = '{INSERT API KEY HERE}'
-    url = f'http://api.airvisual.com/v2/city?city=Renton&state=Washington&country=USA&key={api_key}'
+    url = f'https://api.waqi.info/feed/Renton/?token={api_key}'
     response = requests.get(url)
-    data = json.loads(response.text)
-    return data
+    return json.loads(response.text)
 
 def graph(dict):
     # TODO -
@@ -42,22 +41,17 @@ def add_to_table(cursor, data):
     # TODO - adds a row into a table in the 'cne340_finalproject' database
     pass
 
-def parse_forecasts_data(dict, data):
-    # TODO - parses data for date and aqi and adds them to dict
-    for index, d in enumerate(data):
-        if index > 0:
-            date = d['ts']
-            time_two_digits = date[date.index('T') + 1:date.index('T') + 3]
-            if time_two_digits == '00':
-                aqi_us = str(d['aqius'])
-                date = date[:date.index('T')]
-                dict[date] = aqi_us
-        else:
-            date = d['ts']
-            aqi_us = str(d['aqius'])
-            date = date[:date.index('T')]
-            dict[date] = aqi_us
+def parse_forecast_data(dict, data):
+    # TODO - parses data for date and average pm25 and adds them to dict
+    forecast_data = data['data']['forecast']['daily']['pm25']
+    for row in forecast_data:
+        dict[row['day']] = row['avg']
     return dict
+
+def check_if_day_exist():
+    # TODO -
+    #   returns true or false if the current day exist in the 'cne340_finalproject' database
+    pass
 
 def work():
     # TODO -
