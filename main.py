@@ -1,4 +1,4 @@
-# air quality index project
+# air quality tracker for the city of Renton
 
 import mysql.connector
 import requests
@@ -9,21 +9,21 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def connect_to_db():
-    # TODO - connects to the 'cne340_finalproject' database
+    # TODO - connects to the 'AQI' database
     con = mysql.connector.connect(
         user = 'root',
         password = '',
         host = '127.0.0.1',
-        database = 'cne340_finalproject'
+        database = 'AQI'
     )
     return con
 
 def create_db_table(cursor):
-    # TODO - creates a table in the 'cne340_finalproject' database
+    # TODO - creates a table named 'Renton' with a date and aqi column
     pass
 
 def query(cursor, query):
-    # TODO - executes a query statement to a table in the 'cne340_finalproject' database
+    # TODO - executes a query statement
     cursor.execute(query)
     return cursor
 
@@ -35,6 +35,9 @@ def load_api_data():
     return json.loads(response.text)
 
 def parse_date(dict):
+    # TODO -
+    #   creates a new dictionary
+    #   reformat the date keys to only store the day (date keys excludes the year and month)
     parsed_dict = {}
     for key, value in dict.items():
         parsed_key = key[-2:]
@@ -87,7 +90,7 @@ def graph(cursor, dict):
     fig.savefig('aqi_visual.png')
 
 def add_to_table(cursor, data):
-    # TODO - adds a row into a table in the 'cne340_finalproject' database
+    # TODO - adds a row into the 'Renton' table
     pass
 
 def parse_forecast_data(dict, data):
@@ -99,7 +102,7 @@ def parse_forecast_data(dict, data):
 
 def check_if_day_exist(cursor, date):
     # TODO -
-    #   returns true or false if the current day exist in the 'cne340_finalproject' database
+    #   returns true or false if the current day exist in the 'Renton' table
     pass
 
 def work(cursor):
