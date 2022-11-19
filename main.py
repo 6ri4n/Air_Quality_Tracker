@@ -97,7 +97,7 @@ def parse_forecast_data(dict, data):
         dict[row['day']] = row['avg']
     return dict
 
-def check_if_day_exist(cursor):
+def check_if_day_exist(cursor, date):
     # TODO -
     #   returns true or false if the current day exist in the 'cne340_finalproject' database
     pass
@@ -106,9 +106,9 @@ def work(cursor):
     # TODO -
     #   parse api data (current and forecast) -
     #       create a dictionary and add the parsed data from current
-    #       call parse_forecasts_data and reassign the value of the dictionary
-    #   pass the dictionary into graph to create a graph
+    #       pass the dictionary to parse_forecasts_data and reassign the value of the dictionary
     #   add current data to the 'cne340_finalproject' database (only if the aqi for that day hasn't been added)
+    #   pass the dictionary into graph
     pass
 
 def main():
