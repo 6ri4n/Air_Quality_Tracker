@@ -107,13 +107,23 @@ def check_if_day_exist(cursor, date):
     pass
 
 def work(cursor):
-    # TODO -
-    #   parse api data (current and forecast) -
-    #       create a dictionary and add the parsed data from current
-    #       pass the dictionary to parse_forecasts_data and reassign the value of the dictionary
-    #   add current data to the 'cne340_finalproject' database (only if the aqi for that day hasn't been added)
-    #   pass the dictionary into graph
-    pass
+    # parse api data (current and forecast) -
+    api_data = load_api_data()
+    current_aqi = api_data['data']['aqi']
+    current_date = api_data['data']['time']['s'][:10]
+
+    # create a dictionary and add the parsed data from current
+    ForcastedCurrentData = {current_date: current_aqi}
+
+    # pass the dictionary to parse_forecasts_data and reassign the value of the dictionary
+    ForcastedCurrentData = parse_forecast_data(ForcastedCurrentData, api_data)
+
+    # add current data to the 'Renton' table (only if the day hasn't been added yet)
+    if check_if_day_exist(cursor, current_date):
+        add_to_table(cursor, {current_day: current_aqi})
+
+    # pass the dictionary into graph
+    graph(cursor, ForcastedCurrentData)
 
 def main():
     con = connect_to_db()
