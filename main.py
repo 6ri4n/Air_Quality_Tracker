@@ -52,13 +52,13 @@ def graph(cursor, dict):
     #   graphs the air quality for the week and current month
     #   and saves an image of the graph (overrides previous saves)
     title_year = dict.keys()[0][:4]
-    num_month = dict.keys()[0][5:7]
+    num_month_before = dict.keys()[0][5:7]
     # TODO - convert into integer and remove leading zero
-    if num_month[0] == '0':
-        num_month = int(num_month[-1])
+    if num_month_before[0] == '0':
+        num_month_after = int(num_month_before[-1])
     else:
-        num_month = int(num_month)
-    title_month = calendar.month_name[num_month]
+        num_month_after = int(num_month_before)
+    title_month = calendar.month_name[num_month_after]
 
     week_dict = parse_date(dict)
     graph_dict = {
@@ -66,13 +66,14 @@ def graph(cursor, dict):
     }
 
     # TODO - query for current month aqi
-    q = f''
+    q = f'SELECT date FROM Renton WHERE date LIKE \'{title_year}-{num_month_before}-%\' LIMIT 31'
     cur = query(cursor, q)
     key_list = cur.fetchall()
-    q = f''
+    q = f'SELECT aqi FROM Renton WHERE date LIKE \'{title_year}-{num_month_before}-%\' LIMIT 31'
     cur = query(cursor, q)
     value_list = cur.fetchall()
     month_dict = dict(zip(key_list, value_list))
+    month_dict = parse_date(month_dict)
     graph_dict['Month'] = month_dict
 
     # TODO - create data structures for graph
@@ -109,13 +110,23 @@ def check_if_day_exist(cursor, date):
     pass
 
 def work(cursor):
-    # TODO -
-    #   parse api data (current and forecast) -
-    #       create a dictionary and add the parsed data from current
-    #       pass the dictionary to parse_forecasts_data and reassign the value of the dictionary
-    #   add current data to the 'cne340_finalproject' database (only if the aqi for that day hasn't been added)
-    #   pass the dictionary into graph
-    pass
+    # parse api data (current and forecast) -
+    api_data = load_api_data()
+    current_aqi = api_data['data']['aqi']
+    current_date = api_data['data']['time']['s'][:10]
+
+    # create a dictionary and add the parsed data from current
+    ForcastedCurrentData = {current_date: current_aqi}
+
+    # pass the dictionary to parse_forecasts_data and reassign the value of the dictionary
+    ForcastedCurrentData = parse_forecast_data(ForcastedCurrentData, api_data)
+
+    # add current data to the 'Renton' table (only if the day hasn't been added yet)
+    if check_if_day_exist(cursor, current_date):
+        add_to_table(cursor, {current_day: current_aqi})
+
+    # pass the dictionary into graph
+    graph(cursor, ForcastedCurrentData)
 
 def main():
     con = connect_to_db()
