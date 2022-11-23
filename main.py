@@ -23,7 +23,8 @@ def create_db_table(cursor):
     # date string value
     # aqi int value
     # create table if it doesn't exist
-    cursor.execute('''CREATE TABLE IF NOT EXISTS Renton (date VARCHAR(15), aqi int(4);''')
+    q = '''CREATE TABLE IF NOT EXISTS Renton(date VARCHAR(15), aqi INT);'''
+    query(cursor, q)
 
 def query(cursor, query):
     # TODO - executes a query statement
