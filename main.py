@@ -29,6 +29,7 @@ def query(cursor, query):
 
 def load_api_data():
     # TODO - sends a http request method (a get request) to the api
+    # https://aqicn.org/json-api/doc/#api-_
     api_key = '{INSERT API KEY HERE}'
     url = f'https://api.waqi.info/feed/Renton/?token={api_key}'
     response = requests.get(url)
@@ -44,12 +45,16 @@ def parse_date(dict):
         parsed_dict[parsed_key] = value
     return parsed_dict
 
-def graph(cursor, dict):
+def graph(cursor, data):
     # TODO -
     #   graphs the air quality for the week and current month
     #   and saves an image of the graph (overrides previous saves)
-    title_year = dict.keys()[0][:4]
-    num_month_before = dict.keys()[0][5:7]
+    for key in data.keys():
+        date = key
+        break
+    title_year = date[:4]
+    num_month_before = date[5:7]
+
     # TODO - convert into integer and remove leading zero
     if num_month_before[0] == '0':
         num_month_after = int(num_month_before[-1])
@@ -57,7 +62,7 @@ def graph(cursor, dict):
         num_month_after = int(num_month_before)
     title_month = calendar.month_name[num_month_after]
 
-    week_dict = parse_date(dict)
+    week_dict = parse_date(data)
     graph_dict = {
         'Week': week_dict
     }
@@ -65,10 +70,18 @@ def graph(cursor, dict):
     # TODO - query for current month aqi
     q = f'SELECT date FROM Renton WHERE date LIKE \'{title_year}-{num_month_before}-%\' LIMIT 31'
     cur = query(cursor, q)
-    key_list = cur.fetchall()
+    fetch_key_list = cur.fetchall()
+    key_list = []
+    for key in fetch_key_list:
+        key_list.append(key[0])
+
     q = f'SELECT aqi FROM Renton WHERE date LIKE \'{title_year}-{num_month_before}-%\' LIMIT 31'
     cur = query(cursor, q)
-    value_list = cur.fetchall()
+    fetch_value_list = cur.fetchall()
+    value_list = []
+    for value in fetch_value_list:
+        value_list.append(value[0])
+
     month_dict = dict(zip(key_list, value_list))
     month_dict = parse_date(month_dict)
     graph_dict['Month'] = month_dict
