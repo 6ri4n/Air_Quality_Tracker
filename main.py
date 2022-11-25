@@ -119,7 +119,7 @@ def work(cursor):
     ForcastedCurrentData = parse_forecast_data(ForcastedCurrentData, api_data)
 
     # add current data to the 'Renton' table (only if the day hasn't been added yet)
-    if check_if_day_exist(cursor, current_date):
+    if not check_if_day_exist(cursor, current_date):
         add_to_table(cursor, {current_day: current_aqi})
 
     # pass the dictionary into graph
