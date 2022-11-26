@@ -29,6 +29,7 @@ def query(cursor, query):
 
 def load_api_data():
     # TODO - sends a http request method (a get request) to the api
+    # https://aqicn.org/api/
     # https://aqicn.org/json-api/doc/#api-_
     api_key = '{INSERT API KEY HERE}'
     url = f'https://api.waqi.info/feed/Renton/?token={api_key}'
@@ -107,12 +108,13 @@ def add_to_table(cursor, data):
     # TODO - adds a row into the 'Renton' table
     pass
 
-def parse_forecast_data(dict, data):
-    # TODO - parses data for date and average pm25 and adds them to dict
-    forecast_data = data['data']['forecast']['daily']['pm25']
+def parse_forecast_data(api_data):
+    # TODO - parses api_data for date and average pm25 and adds them to forcasted_dict
+    forcasted_dict = {}
+    forecast_data = api_data['data']['forecast']['daily']['pm25']
     for row in forecast_data:
-        dict[row['day']] = row['avg']
-    return dict
+        forcasted_dict[row['day']] = row['avg']
+    return forcasted_dict
 
 def check_if_day_exist(cursor, date):
     # TODO -
@@ -125,18 +127,15 @@ def work(cursor):
     current_aqi = api_data['data']['aqi']
     current_date = api_data['data']['time']['s'][:10]
 
-    # create a dictionary and add the parsed data from current
-    ForcastedCurrentData = {current_date: current_aqi}
-
-    # pass the dictionary to parse_forecasts_data and reassign the value of the dictionary
-    ForcastedCurrentData = parse_forecast_data(ForcastedCurrentData, api_data)
+    # use parse_forecasts_data to retrieve the current week's average aqi
+    forcasted_dict = parse_forecast_data(api_data)
 
     # add current data to the 'Renton' table (only if the day hasn't been added yet)
-    if check_if_day_exist(cursor, current_date):
-        add_to_table(cursor, {current_day: current_aqi})
+    if not check_if_day_exist(cursor, current_date):
+        add_to_table(cursor, {current_date: current_aqi})
 
-    # pass the dictionary into graph
-    graph(cursor, ForcastedCurrentData)
+    # pass the forcasted_dict into graph
+    graph(cursor, forcasted_dict)
 
 def main():
     con = connect_to_db()
