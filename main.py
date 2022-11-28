@@ -47,6 +47,8 @@ def parse_date(dict):
     parsed_dict = {}
     for key, value in dict.items():
         parsed_key = key[-2:]
+        if parsed_key[0] == '0':
+            parsed_key = parsed_key[1]
         parsed_dict[parsed_key] = value
     return parsed_dict
 
@@ -123,7 +125,16 @@ def parse_forecast_data(api_data):
 def check_if_day_exist(cursor, date):
     # TODO -
     #   returns true or false if the current day exist in the 'Renton' table
-    pass
+    q = f"SELECT date FROM Renton WHERE date = \'{date}\'"
+    cursor = query(cursor, q)
+    # fetchone returns None if no rows are retrieved
+    if cursor.fetchone() is None:
+        # the date is new
+        return False
+    # fetchone returns a row
+    else:
+        # the date exist in the table
+        return True
 
 def work(cursor):
     # parse api data (current and forecast) -
@@ -147,10 +158,10 @@ def main():
     create_db_table(cursor)
     print('>> script: active')
 
-    #while True:
-        #work(cursor)
+    while True:
+        work(cursor)
         # 21600 seconds = 6 hours
-        #time.sleep(21600)
+        time.sleep(21600)
 
 if __name__ == '__main__':
     main()
