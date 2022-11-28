@@ -20,7 +20,11 @@ def connect_to_db():
 
 def create_db_table(cursor):
     # TODO - creates a table named 'Renton' with a date and aqi column
-    pass
+    # date string value
+    # aqi int value
+    # create table if it doesn't exist
+    q = '''CREATE TABLE IF NOT EXISTS Renton(date VARCHAR(15), aqi INT);'''
+    query(cursor, q)
 
 def query(cursor, query):
     # TODO - executes a query statement
