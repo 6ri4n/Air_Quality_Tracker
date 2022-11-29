@@ -111,7 +111,6 @@ def graph(cursor, data):
     fig.savefig('aqi_visual.png')
 
 def add_to_table(cursor, data):
-  def add_to_table(cursor, data):
     # TODO - adds a row into the 'Renton' table
     # parse data - data is a dictionary
     for keys in data.keys():
