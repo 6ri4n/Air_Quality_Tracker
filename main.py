@@ -111,7 +111,16 @@ def graph(cursor, data):
     fig.savefig('aqi_visual.png')
 
 def add_to_table(cursor, data):
+  def add_to_table(cursor, data):
     # TODO - adds a row into the 'Renton' table
+    # parse data - data is a dictionary
+    for keys in data.keys():
+        current_date = keys
+    for values in data.values():
+        current_aqi = values
+    query = cursor.execute("INSERT INTO Renton (date, aqi)"
+             "VALUES(%s,%s)", (current_date , current_aqi))
+     return query(cursor, query)
     pass
 
 def parse_forecast_data(api_data):
