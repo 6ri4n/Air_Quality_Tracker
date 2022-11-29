@@ -117,8 +117,10 @@ def add_to_table(cursor, data):
         current_date = keys
     for values in data.values():
         current_aqi = values
-    query = cursor.execute("INSERT INTO Renton (date, aqi)"
-             "VALUES(%s,%s)", (current_date , current_aqi))
+    query = cursor.execute(
+        'INSERT INTO Renton (date, aqi)'
+        'VALUES (%s, %s)', (current_date, current_aqi)
+    )
     return query(cursor, query)
 
 def parse_forecast_data(api_data):
