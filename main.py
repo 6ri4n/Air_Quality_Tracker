@@ -118,9 +118,9 @@ def add_to_table(cursor, data):
     for values in data.values():
         current_aqi = values
     cursor.execute(
-    'INSERT INTO Renton (date, aqi)'
-    'VALUES (%s, %s)', (current_date, current_aqi)
-)
+        'INSERT INTO Renton (date, aqi)'
+        'VALUES (%s, %s)', (current_date, current_aqi)
+    )
 
 def parse_forecast_data(api_data):
     # TODO - parses api_data for date and average pm25 and adds them to forcasted_dict
