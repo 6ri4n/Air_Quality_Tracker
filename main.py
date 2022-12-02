@@ -58,7 +58,6 @@ def graph(cursor, data):
     #   and saves an image of the graph (overrides previous saves)
     for key in data.keys():
         date = key
-        break
     title_year = date[:4]
     num_month_before = date[5:7]
 
