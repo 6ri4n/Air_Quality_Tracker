@@ -106,7 +106,7 @@ def graph(cursor, data):
     graph[1].set(title = 'PM2.5 For The Month', xlabel = 'Day', ylabel = 'PM2.5')
     graph[1].yaxis.set_label_coords(-.08, 1.1)
     graph[1].xaxis.set_label_coords(.5, -0.18)
-    fig.suptitle(f'Air Quality Index for {title_month} {title_year}', fontsize = 18, y = .95)
+    fig.suptitle(f'Air Quality for {title_month} {title_year}', fontsize = 18, y = .95)
     fig.savefig('aqi_visual.png')
 
 def add_to_table(cursor, data):
